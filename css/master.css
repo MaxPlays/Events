@@ -1,0 +1,71 @@
+.card{
+  margin-bottom: 10px;
+}
+
+.card-title-wrapper{
+  text-align: center;
+}
+
+.card-body{
+  text-align: center;
+}
+
+.card-title{
+  width: auto;
+  display: inline-block;
+  border: 1px solid white;
+  padding: 5px 20px;
+}
+
+.card-title-middle{
+  display: inline-block;
+  margin: 0px 10px;
+}
+
+.date-month, .date-day{
+  display: block;
+}
+
+.card-text{
+  font-size: 1.2em;
+}
+
+.name{
+  display: inline-block;
+  padding: 0px 5px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+
+.userid{
+  display: none;
+}
+
+#login-form{
+  display: none;
+}
+
+@media screen and (min-width: 1800px){
+  .input-group{
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 1799px){
+  .input-group{
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1024px){
+
+  .col-sm-4{
+    flex: none;
+    max-width: none;
+  }
+
+  .input-group{
+    width: 100%;
+  }
+
+}

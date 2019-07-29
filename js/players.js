@@ -113,15 +113,3 @@ $(document).on("click", ".player-token", function(event){
 function copyToClipboardFF(text) {
   window.prompt("Code kopieren", text);
 }
-
-function setTooltip(message) {
-  $('button').tooltip('hide')
-    .attr('data-original-title', message)
-    .tooltip('show');
-}
-
-function hideTooltip() {
-  setTimeout(function() {
-    $('button').tooltip('hide');
-  }, 1000);
-}

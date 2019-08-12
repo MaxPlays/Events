@@ -46,6 +46,10 @@
   display: none;
 }
 
+.important-events{
+  display: none;
+}
+
 @media screen and (min-width: 1800px){
   .input-group{
     width: 50%;

@@ -78,6 +78,9 @@
 
             }
            ?>
+           <li class="nav-item">
+             <a class="nav-link" href="https://github.com/MaxPlays/events" target="_blank">GitHub</a>
+           </li>
         </ul>
       </div>
     </div>
@@ -154,7 +157,12 @@
                   </div>
                   <div class="form-group">
                     <h6>Priorität</h6>
-                    <input type="text" class="form-control" id="create-priority" name="priority" placeholder="Priorität">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" name="priority" id="priority">
+                      <label class="form-check-label" for="priority">
+                        Oben anzeigen
+                      </label>
+                    </div>
                   </div>
                   <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>
@@ -287,7 +295,10 @@
 
     </div>
 
-    <div class="row ml-1 mr-1">
+    <h4 class="ml-4 important-events"><small class="text-muted">Wichtige Events</small></h4>
+    <hr class="mt-1 ml-4 mr-4 important-events">
+
+    <div class="row ml-1 mr-1 important-events" id="important">
 
       <?php
 
@@ -297,7 +308,79 @@
       $stmt->bind_param("i", $time);
       $stmt->execute();
 
-      $stmt = $conn->prepare("SELECT * FROM events ORDER BY priority DESC, start ASC LIMIT 6;");
+
+
+      $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 1 ORDER BY start ASC LIMIT 3;");
+         $stmt->execute();
+         $stmt->store_result();
+         if($stmt->num_rows > 0){
+           $stmt->bind_result($eventid, $title, $info, $dateFrom, $dateTo, $time, $location, $maps, $priority);
+
+           while($stmt->fetch()){
+             $dayFrom = date("j", $dateFrom);
+             $monthFrom = date("n", $dateFrom);
+             $yearFrom = date("Y", $dateFrom);
+             $monthFromName = date("M", $dateFrom);
+
+             if($dateTo != NULL){
+              $dayTo = date("j", $dateTo);
+              $monthTo = date("n", $dateTo);
+              $yearTo = date("Y", $dateTo);
+              $monthToName = date("M", $dateTo);
+
+             echo('
+
+             <div class="col-sm-4">
+             <div class="card bg-dark text-white">
+               <div class="card-body">
+                 <div class="card-title-wrapper">
+                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
+                   <h2 class="card-title-middle">bis</h2>
+                   <h2 class="card-title"><span class="date-month">'.$monthToName.'</span><span class="date-day">'.$dayTo.'</span></h2>
+                 </div>
+                 <p class="card-text">'.$title.'</p>
+                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.' - '.$dayTo.'.'.$monthTo.'.'.$yearTo.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
+                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
+               </div>
+             </div>
+           </div>
+
+             ');
+
+           }else{
+
+             echo('
+
+             <div class="col-sm-4">
+             <div class="card bg-dark text-white">
+               <div class="card-body">
+                 <div class="card-title-wrapper">
+                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
+                 </div>
+                 <p class="card-text">'.$title.'</p>
+                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
+                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
+               </div>
+             </div>
+             </div>
+
+             ');
+
+           }
+           }
+
+        }
+
+        ?>
+      </div>
+
+      <h4 class="ml-4 mt-3 important-events"><small class="text-muted">Alle Events</small></h4>
+      <hr class="mt-1 ml-4 mr-4 important-events">
+
+      <div class="row ml-1 mr-1">
+        <?php
+
+      $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 0 ORDER BY start ASC LIMIT 6;");
          $stmt->execute();
          $stmt->store_result();
          if($stmt->num_rows > 0){

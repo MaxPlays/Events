@@ -96,3 +96,7 @@ $("#token-input-button").click(function(){
 $("#login").click(function(){
   $("#login-form").toggle();
 });
+
+if($("#important").html().replace(" ", "").length > 0){
+  $(".important-events").show();
+}

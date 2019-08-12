@@ -47,8 +47,7 @@
 
       if(strlen($first) > 0 && strlen($last) <= 3){
 
-        $token = substr(md5(uniqid(rand(), true)), 0, 16);
-        
+        $token = md5(uniqid(rand(), true));
 
         $stmt = $conn->prepare("INSERT INTO users(first, last, token) VALUES(?, ?, ?);");
         $stmt->bind_param("sss", $first, $last, $token);

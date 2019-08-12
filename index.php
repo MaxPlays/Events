@@ -297,7 +297,7 @@
       $stmt->bind_param("i", $time);
       $stmt->execute();
 
-      $stmt = $conn->prepare("SELECT * FROM events ORDER BY start ASC LIMIT 6;");
+      $stmt = $conn->prepare("SELECT * FROM events ORDER BY priority DESC, start ASC LIMIT 6;");
          $stmt->execute();
          $stmt->store_result();
          if($stmt->num_rows > 0){

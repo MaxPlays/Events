@@ -12,7 +12,7 @@
 
     $done = array();
 
-    $stmt = $conn->prepare("SELECT users.userid AS userid, users.first AS first, users.last AS last FROM users, zusagen WHERE zusagen.userid = users.userid AND zusagen.eventid = ? ORDER BY users.first ASC, users.last ASC;");
+    $stmt = $conn->prepare("SELECT users.userid AS userid, users.first AS first, users.last AS last FROM users, zusagen WHERE zusagen.userid = users.userid AND zusagen.eventid = ?;");
     $stmt->bind_param("i", $eventid);
     $stmt->execute();
     $stmt->store_result();
@@ -24,7 +24,7 @@
       }
     }
 
-    $stmt = $conn->prepare("SELECT users.userid AS userid, users.first AS first, users.last AS last FROM users, absagen WHERE absagen.userid = users.userid AND absagen.eventid = ? ODER BY users.first ASC, users.last ASC;");
+    $stmt = $conn->prepare("SELECT users.userid AS userid, users.first AS first, users.last AS last FROM users, absagen WHERE absagen.userid = users.userid AND absagen.eventid = ?;");
     $stmt->bind_param("i", $eventid);
     $stmt->execute();
     $stmt->store_result();

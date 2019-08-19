@@ -18,7 +18,7 @@ function clearOptions(){
   options.repeat = "";
   options.location = "";
   options.maps = "";
-  options.priority = false;
+  options.priority = 0;
 
   $("#create-title").removeClass("is-invalid");
   $("#create-date-from").removeClass("is-invalid");
@@ -93,7 +93,7 @@ $(".create-modal-continue").click(function(){
       }else{
         options.title = $("#create-title").val();
         options.info = $("#create-info").val();
-        options.priority = document.getElementById("priority").checked;
+        options.priority = document.getElementById("priority").checked ? 1 : 0;
         progress(3);
       }
       break;
@@ -112,8 +112,8 @@ $(".create-modal-continue").click(function(){
           to.setHours($("#create-time-to").val().split(":")[0]);
           to.setMinutes($("#create-time-to").val().split(":")[1]);
         }
-        options.start = from.getTime();
-        options.end = to.getTime();
+        options.start = Math.floor(from.getTime() / 1000);
+        options.end = Math.floor(to.getTime() / 1000);
 
         if($(".create-modal-day-selected").length > 0){
           var s = "[";
@@ -139,7 +139,6 @@ $(".create-modal-create").click(function(){
   options.location = $("#create-location").val();
   options.maps = $("#create-maps").val();
 
-  console.log(options);
   $.post("create.php", options);
   document.location.reload();
 });

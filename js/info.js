@@ -20,6 +20,6 @@ $('#more-info-modal').on('show.bs.modal', function (event) {
   }
 });
 
-if($("#important").html().replace(" ", "").length > 0){
-  $(".important-events").show();
+if($("#important").html().trim().length > 0){
+  $(".important-events").css("display", "flex");
 }

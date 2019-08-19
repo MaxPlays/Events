@@ -107,8 +107,87 @@
       </div>
     </div>
 
-    <?php
 
+
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="create-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="create-modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body create-modal-phase create-modal-phase-1">
+              <hr>
+              <div class="create-modal-single create-modal-click">
+                <h5 class="mt-1">Einmaliges Event</h5>
+                <small class="text-muted">Ein einmalig stattfindendes Event</small>
+              </div>
+              <hr>
+              <div class="create-modal-repeat create-modal-click">
+                <h5>Regelmäßiges Event</h5>
+                <small class="text-muted">Ein sich regelmäßig wiederholendes Event</small>
+              </div>
+              <hr>
+          </div>
+          <div class="modal-body create-modal-phase create-modal-phase-2">
+              <div class="form-group">
+                <div class="form-group">
+                  <input type="text" required class="form-control" id="create-title" name="title" placeholder="Titel">
+                </div>
+                <div class="form-group">
+                  <textarea  rows="5" cols="80" class="form-control" id="create-info" name="info" placeholder="Beschreibung"></textarea>
+                </div>
+                <div class="form-group">
+                  <h6>Priorität</h6>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" name="priority" id="priority">
+                    <label class="form-check-label" for="priority">
+                      Oben anzeigen
+                    </label>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-body create-modal-phase create-modal-phase-3">
+              <h4>Beginn</h4>
+              <div class="form-group form-inline">
+                <input type="date" class="form-control mr-1" name="date-from" id="create-date-from"> um <input type="time" class="form-control ml-1" name="time-from" id="create-time-from">
+              </div>
+              <h4>Ende</h4>
+              <div class="form-group form-inline">
+                <input type="date" class="form-control mr-1" name="date-to" id="create-date-to"> um <input type="time" class="form-control ml-1" name="time-to" id="create-time-to">
+              </div>
+              <div class="create-modal-repeat-wrapper">
+                <h4>Wiederholen</h4>
+                <div class="create-modal-days">
+                  <div class="create-modal-day">Montag</div>
+                  <div class="create-modal-day">Dienstag</div>
+                  <div class="create-modal-day">Mittwoch</div>
+                  <div class="create-modal-day">Donnerstag</div>
+                  <div class="create-modal-day">Freitag</div>
+                  <div class="create-modal-day">Samstag</div>
+                  <div class="create-modal-day">Sonntag</div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-body create-modal-phase create-modal-phase-4">
+              <input type="text" class="form-control" id="create-location" name="location" placeholder="Name des Orts">
+              <br>
+              <input type="text" class="form-control" id="create-maps" name="maps" placeholder="Google Maps Link (optional)">
+          </div>
+          <div class="modal-footer create-modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+            <button type="button" class="btn btn-primary create-modal-continue">Weiter</button>
+            <button type="button" class="btn btn-primary create-modal-create">Erstellen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <?php
+/*
       if($admin == 1){
 
         echo('
@@ -171,7 +250,7 @@
         ');
 
       }
-
+*/
 
 
      ?>
@@ -447,5 +526,7 @@
     <script src="js/info.js" charset="utf-8"></script>
     <script src="js/players.js" charset="utf-8"></script>
     <script src="js/login.js" charset="utf-8"></script>
+    <script src="js/create.js" charset="utf-8"></script>
+
   </body>
 </html>

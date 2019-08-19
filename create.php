@@ -4,7 +4,7 @@
 
   session_start();
 
-  if(isset($_POST["title"]) && isset($_POST["info"]) && isset($_POST["date-from"]) && isset($_POST["date-to"]) && isset($_POST["time-from"]) && isset($_POST["time-to"]) && isset($_POST["location"]) && isset($_POST["maps"]) && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1){
+  if(isset($_POST["title"]) && isset($_POST["info"]) && isset($_POST["start"]) && isset($_POST["end"]) && isset($_POST["priority"]) && isset($_POST["repeat"]) && isset($_POST["location"]) && isset($_POST["maps"]) && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1){
 
     $dateFrom = strtotime($_POST["date-from"]);
     $dateTo = strtotime($_POST["date-to"]);

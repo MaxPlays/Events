@@ -2,7 +2,9 @@
 
   include "sql.php";
 
-  if(isset($_POST["eventid"])){
+  session_start();
+
+  if(isset($_POST["eventid"]) && isset($_SESSION["admin"]) && $_SESSION["admin"] == 1){
 
     $eventid = $_POST["eventid"];
 

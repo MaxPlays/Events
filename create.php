@@ -22,28 +22,39 @@
       $priority = 0;
     }
 
+    if($start > 0 && $end > 0){
+      $repeatid = "-1";
 
-    $stmt = $conn->prepare("INSERT INTO events(title, info, start, end, location, maps, priority) VALUES(?, ?, ?, ?, ?, ?, ?);");
-    $stmt->bind_param("ssiissi", $title, $info, $start, $end, $location, $maps, $priority);
-    $stmt->execute();
+      $stmt = $conn->prepare("INSERT INTO events(title, info, start, end, location, maps, priority, repeatid) VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
+      $stmt->bind_param("ssiissis", $title, $info, $start, $end, $location, $maps, $priority, $repeatid);
+      $stmt->execute();
+    }else{
+      $repeatid = "0";
 
-    $eventid = $conn->insert_id;
+      $stmt = $conn->prepare("INSERT INTO events(title, info, start, end, location, maps, priority, repeatid) VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
+      $stmt->bind_param("ssiissis", $title, $info, $start, $end, $location, $maps, $priority, $repeatid);
+      $stmt->execute();
 
-    $days = array("Montag" => 0, "Dienstag" => 1, "Mittwoch" => 2, "Donnerstag" => 3, "Freitag" => 4, "Samstag" => 5, "Sonntag" => 6);
+      $eventid = $conn->insert_id;
 
-    if(strlen($_POST["repeat"]) > 0){
+      $days = array("Montag" => 0, "Dienstag" => 1, "Mittwoch" => 2, "Donnerstag" => 3, "Freitag" => 4, "Samstag" => 5, "Sonntag" => 6);
+
 
       $repeat = json_decode($_POST["repeat"], true);
-      $stmt = $conn->prepare("INSERT INTO repeats(eventid, day) VALUES(?, ?);");
-      foreach ($repeat as $day) {
+      $stmt = $conn->prepare("INSERT INTO days(eventid, day, startTime, endTime) VALUES(?, ?, ?, ?);");
+
+      $startTime = $repeat["startTime"];
+      $endTime = $repeat["endTime"];
+
+      foreach ($repeat["days"] as $day) {
         $id = $days[$day["day"]];
-        $stmt->bind_param("ii", $eventid, $id);
+        $stmt->bind_param("iiss", $eventid, $id, $startTime, $endTime);
         $stmt->execute();
       }
 
-    }
+      include "days.php";
 
-    die();
+    }
 
   }else{
     echo("Error");

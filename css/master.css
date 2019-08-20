@@ -72,6 +72,19 @@
   color: white;
 }
 
+.delete-options{
+  display: none;
+  padding: 10px;
+  text-align: right;
+}
+
+.delete-options a{
+  color: red;
+}
+
+.more-info-modal-eventid, .more-info-modal-repeatid{
+  display: none;
+}
 
 @media screen and (min-width: 1800px){
   .input-group{

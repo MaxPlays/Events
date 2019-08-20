@@ -16,6 +16,7 @@
     <?php
 
     include "sql.php";
+    include "days.php";
 
     $token = "";
     if(isset($_GET["token"])){
@@ -99,10 +100,38 @@
             </p>
             <h6>Ort</h6>
             <span class="more-info-modal-location"></span> <span class="more-info-modal-maps-wrapper">(<a class="more-info-modal-maps" target="_blank">Google Maps</a>)</span>
+            <span class="more-info-modal-eventid"></span>
+            <span class="more-info-modal-repeatid"></span>
           </div>
           <div class="modal-footer">
+            <?php
+
+              if($admin == 1){
+
+                echo('<button type="button" class="btn btn-danger delete-button">Löschen</button>');
+
+              }
+
+             ?>
+
             <button type="button" class="btn btn-primary" data-dismiss="modal">Fertig</button>
           </div>
+          <?php
+
+            if($admin == 1){
+
+              echo('
+
+              <div class="delete-options">
+                <a href="#" class="delete-event">Dieses Event löschen</a> <p />
+                <a href="#" class="delete-repeat-events">Alle Events dieser Art löschen</a>
+              </div>
+
+              ');
+
+            }
+
+           ?>
         </div>
       </div>
     </div>
@@ -155,15 +184,20 @@
                   </div>
               </div>
               <div class="modal-body create-modal-phase create-modal-phase-3">
-                  <h4>Beginn</h4>
-                  <div class="form-group form-inline">
-                    <input type="date" class="form-control mr-1" name="date-from" id="create-date-from"> um <input type="time" class="form-control ml-1" name="time-from" id="create-time-from">
-                  </div>
-                  <h4>Ende</h4>
-                  <div class="form-group form-inline">
-                    <input type="date" class="form-control mr-1" name="date-to" id="create-date-to"> um <input type="time" class="form-control ml-1" name="time-to" id="create-time-to">
+                  <div class="create-modal-single-wrapper">
+                    <h4>Beginn</h4>
+                    <div class="form-group form-inline">
+                      <input type="date" class="form-control mr-1" name="date-from" id="create-date-from"> um <input type="time" class="form-control ml-1" name="time-from" id="create-time-from">
+                    </div>
+                    <h4>Ende</h4>
+                    <div class="form-group form-inline">
+                      <input type="date" class="form-control mr-1" name="date-to" id="create-date-to"> um <input type="time" class="form-control ml-1" name="time-to" id="create-time-to">
+                    </div>
                   </div>
                   <div class="create-modal-repeat-wrapper">
+                    <div class="form-group form-inline">
+                    Von <input type="time" class="form-control mr-1 ml-1" id="create-time-repeat-from"> bis <input type="time" class="form-control ml-1" id="create-time-repeat-to">
+                    </div>
                     <h4>Wiederholen</h4>
                     <div class="create-modal-days">
                       <div class="create-modal-day">Montag</div>
@@ -323,17 +357,17 @@
 
       $time = time() - (60 * 60 * 24);
 
-      $stmt = $conn->prepare("DELETE FROM events WHERE start < ?;");
+      $stmt = $conn->prepare('DELETE FROM events WHERE start < ? AND repeatid != "0";');
       $stmt->bind_param("i", $time);
       $stmt->execute();
 
 
 
-      $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 1 ORDER BY start ASC LIMIT 3;");
+      $stmt = $conn->prepare('SELECT * FROM events WHERE priority = 1 AND repeatid != "0" AND deleted = 0 ORDER BY start ASC LIMIT 3;');
          $stmt->execute();
          $stmt->store_result();
          if($stmt->num_rows > 0){
-           $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority);
+           $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority, $repeatid, $deleted);
 
            while($stmt->fetch()){
 
@@ -378,7 +412,7 @@
               echo('
                  </div>
                  <p class="card-text">'.$title.'</p>
-                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
+                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'" data-eventid="'.$eventid.'" data-repeatid="'.$repeatid.'">Mehr Info</a>
                  <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
                </div>
              </div>
@@ -399,11 +433,11 @@
       <div class="row ml-1 mr-1">
         <?php
 
-        $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 0 ORDER BY start ASC LIMIT 6;");
+        $stmt = $conn->prepare('SELECT * FROM events WHERE priority = 0 AND repeatid != "0" AND deleted = 0 ORDER BY start ASC LIMIT 6;');
            $stmt->execute();
            $stmt->store_result();
            if($stmt->num_rows > 0){
-             $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority);
+             $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority, $repeatid, $deleted);
 
              while($stmt->fetch()){
 
@@ -448,7 +482,7 @@
                 echo('
                    </div>
                    <p class="card-text">'.$title.'</p>
-                   <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
+                   <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'" data-eventid="'.$eventid.'" data-repeatid="'.$repeatid.'">Mehr Info</a>
                    <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
                  </div>
                </div>
@@ -470,6 +504,7 @@
     <script src="js/players.js" charset="utf-8"></script>
     <script src="js/login.js" charset="utf-8"></script>
     <script src="js/create.js" charset="utf-8"></script>
+    <script src="js/delete.js" charset="utf-8"></script>
 
   </body>
 </html>

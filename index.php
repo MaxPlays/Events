@@ -16,6 +16,7 @@
     <?php
 
     include "sql.php";
+    include "days.php";
 
     $token = "";
     if(isset($_GET["token"])){
@@ -99,10 +100,38 @@
             </p>
             <h6>Ort</h6>
             <span class="more-info-modal-location"></span> <span class="more-info-modal-maps-wrapper">(<a class="more-info-modal-maps" target="_blank">Google Maps</a>)</span>
+            <span class="more-info-modal-eventid"></span>
+            <span class="more-info-modal-repeatid"></span>
           </div>
           <div class="modal-footer">
+            <?php
+
+              if($admin == 1){
+
+                echo('<button type="button" class="btn btn-danger delete-button">Löschen</button>');
+
+              }
+
+             ?>
+
             <button type="button" class="btn btn-primary" data-dismiss="modal">Fertig</button>
           </div>
+          <?php
+
+            if($admin == 1){
+
+              echo('
+
+              <div class="delete-options">
+                <a href="#" class="delete-event">Dieses Event löschen</a> <p />
+                <a href="#" class="delete-repeat-events">Alle Events dieser Art löschen</a>
+              </div>
+
+              ');
+
+            }
+
+           ?>
         </div>
       </div>
     </div>
@@ -117,52 +146,79 @@
           <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="create-modal-title">Event erstellen</h5>
+                <h5 class="modal-title" id="create-modal-title"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
-                <form action="create.php" method="post">
-                  <div class="form-group">
-                    <input type="text" required class="form-control" id="create-title" name="title" placeholder="Titel">
+              <div class="modal-body create-modal-phase create-modal-phase-1">
+                  <hr>
+                  <div class="create-modal-single create-modal-click">
+                    <h5 class="mt-1">Einmaliges Event</h5>
+                    <small class="text-muted">Ein einmalig stattfindendes Event</small>
                   </div>
-                  <div class="form-group">
-                    <textarea  rows="5" cols="80" class="form-control" id="create-info" name="info" placeholder="Beschreibung"></textarea>
+                  <hr>
+                  <div class="create-modal-repeat create-modal-click">
+                    <h5>Regelmäßiges Event</h5>
+                    <small class="text-muted">Ein sich regelmäßig wiederholendes Event</small>
                   </div>
+                  <hr>
+              </div>
+              <div class="modal-body create-modal-phase create-modal-phase-2">
                   <div class="form-group">
-                    <h6>Datum</h6>
-                    <label>Von:</label>
-                    <input type="date" required class="form-control" name="date-from" id="create-date-from">
-                    <br>
-                    <label>Bis (optional):</label>
-                    <input type="date" class="form-control" name="date-to" id="create-date-to">
-                  </div>
-                  <div class="form-group">
-                    <h6>Uhrzeit</h6>
-                    <label>Von:</label>
-                    <input type="time" class="form-control" name="time-from" id="create-time-from">
-                    <br>
-                    <label>Bis:</label>
-                    <input type="time" class="form-control" name="time-to" id="create-time-to">
-                  </div>
-                  <div class="form-group">
-                    <h6>Ort</h6>
-                    <input type="text" class="form-control" id="create-location" name="location" placeholder="Ort">
-                    <br>
-                    <input type="text" class="form-control" id="create-maps" name="maps" placeholder="Google Maps Link (optional)">
-                  </div>
-                  <div class="form-group">
-                    <h6>Priorität</h6>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" name="priority" id="priority">
-                      <label class="form-check-label" for="priority">
-                        Oben anzeigen
-                      </label>
+                    <div class="form-group">
+                      <input type="text" required class="form-control" id="create-title" name="title" placeholder="Titel">
+                    </div>
+                    <div class="form-group">
+                      <textarea  rows="5" cols="80" class="form-control" id="create-info" name="info" placeholder="Beschreibung"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <h6>Priorität</h6>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" name="priority" id="priority">
+                        <label class="form-check-label" for="priority">
+                          Oben anzeigen
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary">Erstellen</button>
-                </form>
+              </div>
+              <div class="modal-body create-modal-phase create-modal-phase-3">
+                  <div class="create-modal-single-wrapper">
+                    <h4>Beginn</h4>
+                    <div class="form-group form-inline">
+                      <input type="date" class="form-control mr-1" name="date-from" id="create-date-from"> um <input type="time" class="form-control ml-1" name="time-from" id="create-time-from">
+                    </div>
+                    <h4>Ende</h4>
+                    <div class="form-group form-inline">
+                      <input type="date" class="form-control mr-1" name="date-to" id="create-date-to"> um <input type="time" class="form-control ml-1" name="time-to" id="create-time-to">
+                    </div>
+                  </div>
+                  <div class="create-modal-repeat-wrapper">
+                    <div class="form-group form-inline">
+                    Von <input type="time" class="form-control mr-1 ml-1" id="create-time-repeat-from"> bis <input type="time" class="form-control ml-1" id="create-time-repeat-to">
+                    </div>
+                    <h4>Wiederholen</h4>
+                    <div class="create-modal-days">
+                      <div class="create-modal-day">Montag</div>
+                      <div class="create-modal-day">Dienstag</div>
+                      <div class="create-modal-day">Mittwoch</div>
+                      <div class="create-modal-day">Donnerstag</div>
+                      <div class="create-modal-day">Freitag</div>
+                      <div class="create-modal-day">Samstag</div>
+                      <div class="create-modal-day">Sonntag</div>
+                    </div>
+                  </div>
+              </div>
+              <div class="modal-body create-modal-phase create-modal-phase-4">
+                  <input type="text" class="form-control" id="create-location" name="location" placeholder="Name des Orts">
+                  <br>
+                  <input type="text" class="form-control" id="create-maps" name="maps" placeholder="Google Maps Link (optional)">
+              </div>
+              <div class="modal-footer create-modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary create-modal-continue">Weiter</button>
+                <button type="button" class="btn btn-primary create-modal-create">Erstellen</button>
               </div>
             </div>
           </div>
@@ -301,29 +357,42 @@
 
       $time = time() - (60 * 60 * 24);
 
-      $stmt = $conn->prepare("DELETE FROM events WHERE start < ?;");
+      $stmt = $conn->prepare('DELETE FROM events WHERE start < ? AND repeatid != "0";');
       $stmt->bind_param("i", $time);
       $stmt->execute();
 
 
 
-      $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 1 ORDER BY start ASC LIMIT 3;");
+      $stmt = $conn->prepare('SELECT * FROM events WHERE priority = 1 AND repeatid != "0" AND deleted = 0 ORDER BY start ASC LIMIT 3;');
          $stmt->execute();
          $stmt->store_result();
          if($stmt->num_rows > 0){
-           $stmt->bind_result($eventid, $title, $info, $dateFrom, $dateTo, $time, $location, $maps, $priority);
+           $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority, $repeatid, $deleted);
 
            while($stmt->fetch()){
-             $dayFrom = date("j", $dateFrom);
-             $monthFrom = date("n", $dateFrom);
-             $yearFrom = date("Y", $dateFrom);
-             $monthFromName = date("M", $dateFrom);
 
-             if($dateTo != NULL){
-              $dayTo = date("j", $dateTo);
-              $monthTo = date("n", $dateTo);
-              $yearTo = date("Y", $dateTo);
-              $monthToName = date("M", $dateTo);
+             $dateFrom = date("d.m.Y", (int)$start);
+             $dateTo = date("d.m.Y", (int)$end);
+
+             $dayFrom = date("j", (int)$start);
+             $monthFromName = date("M", (int)$start);
+
+             $dayTo = date("j", (int)$end);
+             $monthToName = date("M", (int)$end);
+
+             $timeFrom = date("H:i", (int)$start);
+             $timeTo = date("H:i", (int)$end);
+
+             if($start == $end){
+               $date = $dateFrom;
+               $time = "";
+             }else if($dateFrom == $dateTo){
+               $date = $dateFrom;
+               $time = $timeFrom." - ".$timeTo;
+             }else{
+               $date = $dateFrom." um ".$timeFrom." bis";
+               $time = $dateTo." um ".$timeTo;
+             }
 
              echo('
 
@@ -331,12 +400,19 @@
              <div class="card bg-dark text-white">
                <div class="card-body">
                  <div class="card-title-wrapper">
-                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
+                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>');
+
+                if($dateFrom != $dateTo){
+                  echo('
                    <h2 class="card-title-middle">bis</h2>
                    <h2 class="card-title"><span class="date-month">'.$monthToName.'</span><span class="date-day">'.$dayTo.'</span></h2>
+                   ');
+                }
+
+              echo('
                  </div>
                  <p class="card-text">'.$title.'</p>
-                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.' - '.$dayTo.'.'.$monthTo.'.'.$yearTo.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
+                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'" data-eventid="'.$eventid.'" data-repeatid="'.$repeatid.'">Mehr Info</a>
                  <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
                </div>
              </div>
@@ -344,26 +420,6 @@
 
              ');
 
-           }else{
-
-             echo('
-
-             <div class="col-sm-4">
-             <div class="card bg-dark text-white">
-               <div class="card-body">
-                 <div class="card-title-wrapper">
-                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
-                 </div>
-                 <p class="card-text">'.$title.'</p>
-                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
-                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
-               </div>
-             </div>
-             </div>
-
-             ');
-
-           }
            }
 
         }
@@ -377,66 +433,66 @@
       <div class="row ml-1 mr-1">
         <?php
 
-      $stmt = $conn->prepare("SELECT * FROM events WHERE priority = 0 ORDER BY start ASC LIMIT 6;");
-         $stmt->execute();
-         $stmt->store_result();
-         if($stmt->num_rows > 0){
-           $stmt->bind_result($eventid, $title, $info, $dateFrom, $dateTo, $time, $location, $maps, $priority);
+        $stmt = $conn->prepare('SELECT * FROM events WHERE priority = 0 AND repeatid != "0" AND deleted = 0 ORDER BY start ASC LIMIT 6;');
+           $stmt->execute();
+           $stmt->store_result();
+           if($stmt->num_rows > 0){
+             $stmt->bind_result($eventid, $title, $info, $start, $end, $location, $maps, $priority, $repeatid, $deleted);
 
-           while($stmt->fetch()){
-             $dayFrom = date("j", $dateFrom);
-             $monthFrom = date("n", $dateFrom);
-             $yearFrom = date("Y", $dateFrom);
-             $monthFromName = date("M", $dateFrom);
+             while($stmt->fetch()){
 
-             if($dateTo != NULL){
-              $dayTo = date("j", $dateTo);
-              $monthTo = date("n", $dateTo);
-              $yearTo = date("Y", $dateTo);
-              $monthToName = date("M", $dateTo);
+               $dateFrom = date("d.m.Y", (int)$start);
+               $dateTo = date("d.m.Y", (int)$end);
 
-             echo('
+               $dayFrom = date("j", (int)$start);
+               $monthFromName = date("M", (int)$start);
 
-             <div class="col-sm-4">
-             <div class="card bg-dark text-white">
-               <div class="card-body">
-                 <div class="card-title-wrapper">
-                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
-                   <h2 class="card-title-middle">bis</h2>
-                   <h2 class="card-title"><span class="date-month">'.$monthToName.'</span><span class="date-day">'.$dayTo.'</span></h2>
+               $dayTo = date("j", (int)$end);
+               $monthToName = date("M", (int)$end);
+
+               $timeFrom = date("H:i", (int)$start);
+               $timeTo = date("H:i", (int)$end);
+
+               if($start == $end){
+                 $date = $dateFrom;
+                 $time = "";
+               }else if($dateFrom == $dateTo){
+                 $date = $dateFrom;
+                 $time = $timeFrom." - ".$timeTo;
+               }else{
+                 $date = $dateFrom." um ".$timeFrom." bis";
+                 $time = $dateTo." um ".$timeTo;
+               }
+
+               echo('
+
+               <div class="col-sm-4">
+               <div class="card bg-dark text-white">
+                 <div class="card-body">
+                   <div class="card-title-wrapper">
+                     <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>');
+
+                  if($dateFrom != $dateTo){
+                    echo('
+                     <h2 class="card-title-middle">bis</h2>
+                     <h2 class="card-title"><span class="date-month">'.$monthToName.'</span><span class="date-day">'.$dayTo.'</span></h2>
+                     ');
+                  }
+
+                echo('
+                   </div>
+                   <p class="card-text">'.$title.'</p>
+                   <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$date.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'" data-eventid="'.$eventid.'" data-repeatid="'.$repeatid.'">Mehr Info</a>
+                   <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
                  </div>
-                 <p class="card-text">'.$title.'</p>
-                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.' - '.$dayTo.'.'.$monthTo.'.'.$yearTo.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
-                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
                </div>
              </div>
-           </div>
 
-             ');
+               ');
 
-           }else{
+             }
 
-             echo('
-
-             <div class="col-sm-4">
-             <div class="card bg-dark text-white">
-               <div class="card-body">
-                 <div class="card-title-wrapper">
-                   <h2 class="card-title"><span class="date-month">'.$monthFromName.'</span><span class="date-day">'.$dayFrom.'</span></h2>
-                 </div>
-                 <p class="card-text">'.$title.'</p>
-                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#more-info-modal" data-title="'.$title.'" data-date="'.$dayFrom.'.'.$monthFrom.'.'.$yearFrom.'" data-time="'.$time.'" data-info="'.$info.'" data-location="'.$location.'" data-maps="'.$maps.'">Mehr Info</a>
-                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#anmelden-modal" data-eventid="'.$eventid.'">An-/abmelden</a>
-               </div>
-             </div>
-             </div>
-
-             ');
-
-           }
-           }
-
-        }
+          }
 
        ?>
 </div>
@@ -447,5 +503,8 @@
     <script src="js/info.js" charset="utf-8"></script>
     <script src="js/players.js" charset="utf-8"></script>
     <script src="js/login.js" charset="utf-8"></script>
+    <script src="js/create.js" charset="utf-8"></script>
+    <script src="js/delete.js" charset="utf-8"></script>
+
   </body>
 </html>

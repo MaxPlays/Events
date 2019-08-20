@@ -50,6 +50,42 @@
   display: none;
 }
 
+.create-modal-click{
+  user-select: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.create-modal-day{
+  display: inline-block;
+  border: 1px solid #343a40;
+  color: #343a40;
+  border-radius: 100px;
+  padding: 5px 10px;
+  margin-top: 10px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.create-modal-day-selected{
+  background: #343a40;
+  color: white;
+}
+
+.delete-options{
+  display: none;
+  padding: 10px;
+  text-align: right;
+}
+
+.delete-options a{
+  color: red;
+}
+
+.more-info-modal-eventid, .more-info-modal-repeatid{
+  display: none;
+}
+
 @media screen and (min-width: 1800px){
   .input-group{
     width: 50%;
